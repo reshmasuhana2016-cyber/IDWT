@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"        # Frontend accessible on host port 3000
+    depends_on:
+      - backend
+    restart: always
+    environment:
+      - REACT_APP_API_URL=http://backend:5000   # Internal Docker network URL
+
+  admin:
+    build: ./admin
+    container_name: admin
+    ports:
+      - "4000:80"        # Admin accessible on host port 4000
+    depends_on:
+      - backend
+    restart: always
+    environment:
+      - REACT_APP_API_URL=http://backend:5000   # Internal Docker network URL
+
+# Optional: Network configuration (Docker Compose uses a default network)
+networks:
+  default:
+    name: idwt_network
+    driver: bridge
