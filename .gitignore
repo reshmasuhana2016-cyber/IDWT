@@ -17,3 +17,8 @@ admin/build
 
 # OS
 .DS_Store
+
+build
+dist
+.next
+.cache
